@@ -4,7 +4,7 @@
         unused, unused_extern_crates, unused_import_braces,
         unused_qualifications, unused_results, unused_typecasts)]
 
-#![feature(associated_types, default_type_params, macro_rules)]
+#![feature(macro_rules)]
 
 extern crate num;
 
@@ -22,7 +22,9 @@ pub struct Matrix<T> {
 impl<T> Matrix<T> {
     /// Creates a new `Matrix`.
     #[inline]
-    pub fn from_fn(row: uint, column: uint, f: |uint, uint| -> T) -> Matrix<T> {
+    pub fn from_fn<F>(row: uint, column: uint, f: F) -> Matrix<T>
+        where F:Fn(uint, uint) -> T
+    {
         Matrix {
             row: row,
             column: column,
