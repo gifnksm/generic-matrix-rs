@@ -10,7 +10,7 @@ use std::ops::{Add, Index, Mul, Sub};
 use num::{One, Zero};
 
 /// 2D matrix.
-#[derive(PartialEq, Eq, Clone, Show)]
+#[derive(PartialEq, Eq, Clone, Debug)]
 pub struct Matrix<T> {
     row: usize,
     column: usize,
