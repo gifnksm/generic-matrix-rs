@@ -82,7 +82,7 @@ impl<T> Index<(usize, usize)> for Matrix<T> {
     type Output = T;
 
     #[inline]
-    fn index(&self, &(i, j): &(usize, usize)) -> &T {
+    fn index(&self, (i, j): (usize, usize)) -> &T {
         assert!(i < self.row() && j < self.column());
         &self.data[i * self.column() + j]
     }
