@@ -256,6 +256,12 @@ mod tests {
         }
     }
 
+    #[test]
+    fn index_mut() {
+        let mut m = Matrix::one(2, 2);
+        m[(1,1)] = 0;
+        assert_eq!(Matrix::from_vec(2, 2, vec![1, 0, 0, 0]), m);
+    }
 
     #[test]
     fn mul() {
