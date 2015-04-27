@@ -6,7 +6,7 @@
 
 extern crate num;
 
-use std::ops::{Add, Index, Mul, Sub};
+use std::ops::{Add, Index, IndexMut, Mul, Sub};
 use num::{One, Zero};
 
 /// 2D matrix.
@@ -85,6 +85,14 @@ impl<T> Index<(usize, usize)> for Matrix<T> {
     fn index(&self, (i, j): (usize, usize)) -> &T {
         assert!(i < self.row() && j < self.column());
         &self.data[i * self.column() + j]
+    }
+}
+
+impl<T> IndexMut<(usize, usize)> for Matrix<T> {
+    #[inline]
+    fn index_mut(&mut self, (i, j): (usize, usize)) -> &mut T {
+        assert!(i < self.row && j < self.column);
+        &mut self.data[i * self.column + j]
     }
 }
 
