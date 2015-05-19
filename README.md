@@ -16,5 +16,5 @@ generic-matrix = "*"
 and this to your crate root:
 
 ```rust
-extern crate "generic-matrix" as matrix;
+extern crate generic_matrix as matrix;
 ```
