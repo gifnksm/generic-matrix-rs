@@ -105,7 +105,7 @@ macro_rules! forward_val_val_binop {
 
             #[inline]
             fn $method(self, other: Matrix<Rhs>) -> Matrix<<Lhs as $imp<Rhs>>::Output> {
-                (&self).$method(&other)
+                $imp::$method(&self, &other)
             }
         }
     }
@@ -120,7 +120,7 @@ macro_rules! forward_ref_val_binop {
 
             #[inline]
             fn $method(self, other: Matrix<Rhs>) -> Matrix<<Lhs as $imp<Rhs>>::Output> {
-                self.$method(&other)
+                $imp::$method(self, &other)
             }
         }
     }
@@ -135,7 +135,7 @@ macro_rules! forward_val_ref_binop {
 
             #[inline]
             fn $method(self, other: &Matrix<Rhs>) -> Matrix<<Lhs as $imp<Rhs>>::Output> {
-                (&self).$method(other)
+                $imp::$method(&self, other)
             }
         }
     }
@@ -185,7 +185,7 @@ impl<Lhs, Rhs> Mul<Matrix<Rhs>> for Matrix<Lhs>
 
     #[inline]
     fn mul(self, other: Matrix<Rhs>) -> Matrix<<Lhs as Mul<Rhs>>::Output> {
-        (&self).mul(&other)
+        Mul::mul(&self, &other)
     }
 }
 
@@ -197,7 +197,7 @@ impl<'a, Lhs, Rhs> Mul<Matrix<Rhs>> for &'a Matrix<Lhs>
 
     #[inline]
     fn mul(self, other: Matrix<Rhs>) ->  Matrix<<Lhs as Mul<Rhs>>::Output> {
-        self.mul(&other)
+        Mul::mul(self, &other)
     }
 }
 
@@ -209,7 +209,7 @@ impl<'a, Lhs, Rhs> Mul<&'a Matrix<Rhs>> for Matrix<Lhs>
 
     #[inline]
     fn mul(self, other: &Matrix<Rhs>) -> Matrix<<Lhs as Mul<Rhs>>::Output> {
-        self.mul(other)
+        Mul::mul(&self, other)
     }
 }
 
