@@ -1,4 +1,7 @@
-# general-matrix-rs [![Build Status](https://travis-ci.org/gifnksm/generic-matrix-rs.svg)](https://travis-ci.org/gifnksm/generic-matrix-rs) [![Coverage Status](https://coveralls.io/repos/gifnksm/generic-matrix-rs/badge.svg?branch=master&service=github)](https://coveralls.io/github/gifnksm/generic-matrix-rs?branch=master)
+# general-matrix-rs
+[![Build Status](https://travis-ci.org/gifnksm/generic-matrix-rs.svg)](https://travis-ci.org/gifnksm/generic-matrix-rs)
+[![Coverage Status](https://coveralls.io/repos/gifnksm/generic-matrix-rs/badge.svg?branch=master&service=github)](https://coveralls.io/github/gifnksm/generic-matrix-rs?branch=master)
+[![crates.io](http://meritbadge.herokuapp.com/generic-matrix)](https://crates.io/crates/generic-matrix)
 
 Manipulations and data types that represent 2d matrix.
 
