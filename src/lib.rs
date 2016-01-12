@@ -1,3 +1,10 @@
+// Copyright 2016 generic-matrix-rs Developers
+//
+// Licensed under the Apache License, Version 2.0, <LICENSE-APACHE or
+// http://apache.org/licenses/LICENSE-2.0> or the MIT license <LICENSE-MIT or
+// http://opensource.org/licenses/MIT>, at your option. This file may not be
+// copied, modified, or distributed except according to those terms.
+
 //! Manipulations and data types that represent 2d matrix.
 
 #![warn(bad_style, missing_docs,
@@ -14,19 +21,19 @@ use num::{One, Zero};
 pub struct Matrix<T> {
     row: usize,
     column: usize,
-    data: Vec<T>
+    data: Vec<T>,
 }
 
 impl<T> Matrix<T> {
     /// Creates a new `Matrix`.
     #[inline]
     pub fn from_fn<F>(row: usize, column: usize, f: F) -> Matrix<T>
-        where F:Fn(usize, usize) -> T
+        where F: Fn(usize, usize) -> T
     {
         Matrix {
             row: row,
             column: column,
-            data: (0 .. row * column).map(|i| f(i / column, i % column)).collect()
+            data: (0..row * column).map(|i| f(i / column, i % column)).collect(),
         }
     }
 
@@ -34,18 +41,28 @@ impl<T> Matrix<T> {
     #[inline]
     pub fn from_vec(row: usize, column: usize, data: Vec<T>) -> Matrix<T> {
         assert_eq!(row * column, data.len());
-        Matrix { row: row, column: column, data: data }
+        Matrix {
+            row: row,
+            column: column,
+            data: data,
+        }
     }
 
     /// Returns the matrix's row and column.
     #[inline]
-    pub fn size(&self) -> (usize, usize) { (self.row(), self.column()) }
+    pub fn size(&self) -> (usize, usize) {
+        (self.row(), self.column())
+    }
     /// Returns the matrix's row.
     #[inline]
-    pub fn row(&self) -> usize { self.row }
+    pub fn row(&self) -> usize {
+        self.row
+    }
     /// Returns the matrix's column.
     #[inline]
-    pub fn column(&self) -> usize { self.column }
+    pub fn column(&self) -> usize {
+        self.column
+    }
 }
 
 impl<T: Zero> Matrix<T> {
@@ -152,33 +169,40 @@ macro_rules! forward_all_binop {
 forward_all_binop!(impl Add, add);
 
 impl<'a, 'b, Lhs, Rhs> Add<&'b Matrix<Rhs>> for &'a Matrix<Lhs>
-    where Lhs: Add<Rhs> + Clone, Rhs: Clone
+    where Lhs: Add<Rhs> + Clone,
+          Rhs: Clone
 {
     type Output = Matrix<<Lhs as Add<Rhs>>::Output>;
 
     #[inline]
     fn add(self, other: &Matrix<Rhs>) -> Matrix<<Lhs as Add<Rhs>>::Output> {
         assert_eq!(self.size(), other.size());
-        Matrix::from_fn(self.row(), self.column(), |i, j| self[(i, j)].clone() + other[(i, j)].clone())
+        Matrix::from_fn(self.row(),
+                        self.column(),
+                        |i, j| self[(i, j)].clone() + other[(i, j)].clone())
     }
 }
 
 forward_all_binop!(impl Sub, sub);
 
 impl<'a, 'b, Lhs, Rhs> Sub<&'b Matrix<Rhs>> for &'a Matrix<Lhs>
-    where Lhs: Sub<Rhs> + Clone, Rhs: Clone
+    where Lhs: Sub<Rhs> + Clone,
+          Rhs: Clone
 {
     type Output = Matrix<<Lhs as Sub<Rhs>>::Output>;
 
     #[inline]
     fn sub(self, other: &Matrix<Rhs>) -> Matrix<<Lhs as Sub<Rhs>>::Output> {
         assert_eq!(self.size(), other.size());
-        Matrix::from_fn(self.row(), self.column(), |i, j| self[(i, j)].clone() - other[(i, j)].clone())
+        Matrix::from_fn(self.row(),
+                        self.column(),
+                        |i, j| self[(i, j)].clone() - other[(i, j)].clone())
     }
 }
 
 impl<Lhs, Rhs> Mul<Matrix<Rhs>> for Matrix<Lhs>
-    where Lhs: Mul<Rhs> + Clone, Rhs: Clone,
+    where Lhs: Mul<Rhs> + Clone,
+          Rhs: Clone,
           <Lhs as Mul<Rhs>>::Output: Add<Output = <Lhs as Mul<Rhs>>::Output>
 {
     type Output = Matrix<<Lhs as Mul<Rhs>>::Output>;
@@ -190,19 +214,21 @@ impl<Lhs, Rhs> Mul<Matrix<Rhs>> for Matrix<Lhs>
 }
 
 impl<'a, Lhs, Rhs> Mul<Matrix<Rhs>> for &'a Matrix<Lhs>
-    where Lhs: Mul<Rhs> + Clone, Rhs: Clone,
+    where Lhs: Mul<Rhs> + Clone,
+          Rhs: Clone,
           <Lhs as Mul<Rhs>>::Output: Add<Output = <Lhs as Mul<Rhs>>::Output>
 {
     type Output = Matrix<<Lhs as Mul<Rhs>>::Output>;
 
     #[inline]
-    fn mul(self, other: Matrix<Rhs>) ->  Matrix<<Lhs as Mul<Rhs>>::Output> {
+    fn mul(self, other: Matrix<Rhs>) -> Matrix<<Lhs as Mul<Rhs>>::Output> {
         Mul::mul(self, &other)
     }
 }
 
 impl<'a, Lhs, Rhs> Mul<&'a Matrix<Rhs>> for Matrix<Lhs>
-    where Lhs: Mul<Rhs> + Clone, Rhs: Clone,
+    where Lhs: Mul<Rhs> + Clone,
+          Rhs: Clone,
           <Lhs as Mul<Rhs>>::Output: Add<Output = <Lhs as Mul<Rhs>>::Output>
 {
     type Output = Matrix<<Lhs as Mul<Rhs>>::Output>;
@@ -214,7 +240,8 @@ impl<'a, Lhs, Rhs> Mul<&'a Matrix<Rhs>> for Matrix<Lhs>
 }
 
 impl<'a, 'b, Lhs, Rhs> Mul<&'b Matrix<Rhs>> for &'a Matrix<Lhs>
-    where Lhs: Mul<Rhs> + Clone, Rhs: Clone,
+    where Lhs: Mul<Rhs> + Clone,
+          Rhs: Clone,
           <Lhs as Mul<Rhs>>::Output: Add<Output = <Lhs as Mul<Rhs>>::Output>
 {
     type Output = Matrix<<Lhs as Mul<Rhs>>::Output>;
@@ -224,7 +251,7 @@ impl<'a, 'b, Lhs, Rhs> Mul<&'b Matrix<Rhs>> for &'a Matrix<Lhs>
         assert_eq!(self.column(), other.row());
         Matrix::from_fn(self.row(), other.column(), |i, j| {
             let mut sum = self[(i, 0)].clone() * other[(0, j)].clone();
-            for k in 1 .. self.column() {
+            for k in 1..self.column() {
                 sum = sum + self[(i, k)].clone() * other[(k, j)].clone();
             }
             sum
@@ -239,8 +266,8 @@ mod tests {
     #[test]
     fn from_vec() {
         let mat = Matrix::from_vec(2, 3, vec![(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2)]);
-        for i in 0 .. mat.row() {
-            for j in 0 .. mat.column() {
+        for i in 0..mat.row() {
+            for j in 0..mat.column() {
                 assert_eq!((i, j), mat[(i, j)]);
             }
         }
@@ -249,8 +276,8 @@ mod tests {
     #[test]
     fn index() {
         let mat = Matrix::from_fn(3, 5, |i, j| (i, j));
-        for i in 0 .. mat.row() {
-            for j in 0 .. mat.column() {
+        for i in 0..mat.row() {
+            for j in 0..mat.column() {
                 assert_eq!((i, j), mat[(i, j)]);
             }
         }
@@ -259,7 +286,7 @@ mod tests {
     #[test]
     fn index_mut() {
         let mut m = Matrix::one(2, 2);
-        m[(1,1)] = 0;
+        m[(1, 1)] = 0;
         assert_eq!(Matrix::from_vec(2, 2, vec![1, 0, 0, 0]), m);
     }
 
@@ -276,4 +303,3 @@ mod tests {
                    Matrix::from_vec(3, 2, vec![1.0, 0.0, 0.0, 0.0, 0.0, 1.0]));
     }
 }
-
