@@ -10,4 +10,4 @@ description = "Manipulations and data types that represent 2d matrix."
 documentation = "https://gifnksm.github.io/generic-matrix-rs"
 
 [dependencies]
-num = "0.1"
+num-traits = "0.1"

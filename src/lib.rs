@@ -11,10 +11,10 @@
         unused, unused_extern_crates, unused_import_braces,
         unused_qualifications, unused_results)]
 
-extern crate num;
+extern crate num_traits;
 
 use std::ops::{Add, Index, IndexMut, Mul, Sub};
-use num::{One, Zero};
+use num_traits::{One, Zero};
 
 /// 2D matrix.
 #[derive(PartialEq, Eq, Clone, Debug)]
@@ -33,7 +33,9 @@ impl<T> Matrix<T> {
         Matrix {
             row: row,
             column: column,
-            data: (0..row * column).map(|i| f(i / column, i % column)).collect(),
+            data: (0..row * column)
+                .map(|i| f(i / column, i % column))
+                .collect(),
         }
     }
 
@@ -77,13 +79,9 @@ impl<T: One + Zero> Matrix<T> {
     /// Creates a identity matrix.
     #[inline]
     pub fn one(row: usize, column: usize) -> Matrix<T> {
-        Matrix::from_fn(row, column, |i, j| {
-            if i == j {
-                One::one()
-            } else {
-                Zero::zero()
-            }
-        })
+        Matrix::from_fn(row,
+                        column,
+                        |i, j| if i == j { One::one() } else { Zero::zero() })
     }
 }
 
