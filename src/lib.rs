@@ -11,10 +11,10 @@
         unused, unused_extern_crates, unused_import_braces,
         unused_qualifications, unused_results)]
 
-extern crate num;
+extern crate num_traits;
 
 use std::ops::{Add, Index, IndexMut, Mul, Sub};
-use num::{One, Zero};
+use num_traits::{One, Zero};
 
 /// 2D matrix.
 #[derive(PartialEq, Eq, Clone, Debug)]
