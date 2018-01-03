@@ -7,9 +7,8 @@
 
 //! Manipulations and data types that represent 2d matrix.
 
-#![warn(bad_style, missing_docs,
-        unused, unused_extern_crates, unused_import_braces,
-        unused_qualifications, unused_results)]
+#![warn(bad_style, missing_docs, unused, unused_extern_crates, unused_import_braces,
+       unused_qualifications, unused_results)]
 
 extern crate num_traits;
 
@@ -28,7 +27,8 @@ impl<T> Matrix<T> {
     /// Creates a new `Matrix`.
     #[inline]
     pub fn from_fn<F>(row: usize, column: usize, f: F) -> Matrix<T>
-        where F: Fn(usize, usize) -> T
+    where
+        F: Fn(usize, usize) -> T,
     {
         Matrix {
             row: row,
@@ -79,9 +79,11 @@ impl<T: One + Zero> Matrix<T> {
     /// Creates a identity matrix.
     #[inline]
     pub fn one(row: usize, column: usize) -> Matrix<T> {
-        Matrix::from_fn(row,
-                        column,
-                        |i, j| if i == j { One::one() } else { Zero::zero() })
+        Matrix::from_fn(row, column, |i, j| if i == j {
+            One::one()
+        } else {
+            Zero::zero()
+        })
     }
 }
 
@@ -167,41 +169,44 @@ macro_rules! forward_all_binop {
 forward_all_binop!(impl Add, add);
 
 impl<'a, 'b, Lhs, Rhs> Add<&'b Matrix<Rhs>> for &'a Matrix<Lhs>
-    where Lhs: Add<Rhs> + Clone,
-          Rhs: Clone
+where
+    Lhs: Add<Rhs> + Clone,
+    Rhs: Clone,
 {
     type Output = Matrix<<Lhs as Add<Rhs>>::Output>;
 
     #[inline]
     fn add(self, other: &Matrix<Rhs>) -> Matrix<<Lhs as Add<Rhs>>::Output> {
         assert_eq!(self.size(), other.size());
-        Matrix::from_fn(self.row(),
-                        self.column(),
-                        |i, j| self[(i, j)].clone() + other[(i, j)].clone())
+        Matrix::from_fn(self.row(), self.column(), |i, j| {
+            self[(i, j)].clone() + other[(i, j)].clone()
+        })
     }
 }
 
 forward_all_binop!(impl Sub, sub);
 
 impl<'a, 'b, Lhs, Rhs> Sub<&'b Matrix<Rhs>> for &'a Matrix<Lhs>
-    where Lhs: Sub<Rhs> + Clone,
-          Rhs: Clone
+where
+    Lhs: Sub<Rhs> + Clone,
+    Rhs: Clone,
 {
     type Output = Matrix<<Lhs as Sub<Rhs>>::Output>;
 
     #[inline]
     fn sub(self, other: &Matrix<Rhs>) -> Matrix<<Lhs as Sub<Rhs>>::Output> {
         assert_eq!(self.size(), other.size());
-        Matrix::from_fn(self.row(),
-                        self.column(),
-                        |i, j| self[(i, j)].clone() - other[(i, j)].clone())
+        Matrix::from_fn(self.row(), self.column(), |i, j| {
+            self[(i, j)].clone() - other[(i, j)].clone()
+        })
     }
 }
 
 impl<Lhs, Rhs> Mul<Matrix<Rhs>> for Matrix<Lhs>
-    where Lhs: Mul<Rhs> + Clone,
-          Rhs: Clone,
-          <Lhs as Mul<Rhs>>::Output: Add<Output = <Lhs as Mul<Rhs>>::Output>
+where
+    Lhs: Mul<Rhs> + Clone,
+    Rhs: Clone,
+    <Lhs as Mul<Rhs>>::Output: Add<Output = <Lhs as Mul<Rhs>>::Output>,
 {
     type Output = Matrix<<Lhs as Mul<Rhs>>::Output>;
 
@@ -212,9 +217,10 @@ impl<Lhs, Rhs> Mul<Matrix<Rhs>> for Matrix<Lhs>
 }
 
 impl<'a, Lhs, Rhs> Mul<Matrix<Rhs>> for &'a Matrix<Lhs>
-    where Lhs: Mul<Rhs> + Clone,
-          Rhs: Clone,
-          <Lhs as Mul<Rhs>>::Output: Add<Output = <Lhs as Mul<Rhs>>::Output>
+where
+    Lhs: Mul<Rhs> + Clone,
+    Rhs: Clone,
+    <Lhs as Mul<Rhs>>::Output: Add<Output = <Lhs as Mul<Rhs>>::Output>,
 {
     type Output = Matrix<<Lhs as Mul<Rhs>>::Output>;
 
@@ -225,9 +231,10 @@ impl<'a, Lhs, Rhs> Mul<Matrix<Rhs>> for &'a Matrix<Lhs>
 }
 
 impl<'a, Lhs, Rhs> Mul<&'a Matrix<Rhs>> for Matrix<Lhs>
-    where Lhs: Mul<Rhs> + Clone,
-          Rhs: Clone,
-          <Lhs as Mul<Rhs>>::Output: Add<Output = <Lhs as Mul<Rhs>>::Output>
+where
+    Lhs: Mul<Rhs> + Clone,
+    Rhs: Clone,
+    <Lhs as Mul<Rhs>>::Output: Add<Output = <Lhs as Mul<Rhs>>::Output>,
 {
     type Output = Matrix<<Lhs as Mul<Rhs>>::Output>;
 
@@ -238,9 +245,10 @@ impl<'a, Lhs, Rhs> Mul<&'a Matrix<Rhs>> for Matrix<Lhs>
 }
 
 impl<'a, 'b, Lhs, Rhs> Mul<&'b Matrix<Rhs>> for &'a Matrix<Lhs>
-    where Lhs: Mul<Rhs> + Clone,
-          Rhs: Clone,
-          <Lhs as Mul<Rhs>>::Output: Add<Output = <Lhs as Mul<Rhs>>::Output>
+where
+    Lhs: Mul<Rhs> + Clone,
+    Rhs: Clone,
+    <Lhs as Mul<Rhs>>::Output: Add<Output = <Lhs as Mul<Rhs>>::Output>,
 {
     type Output = Matrix<<Lhs as Mul<Rhs>>::Output>;
 
@@ -293,11 +301,15 @@ mod tests {
         let m1 = Matrix::from_vec(1, 3, vec![1.0f64, 2.0, 3.0]);
         let m2 = Matrix::from_vec(3, 1, vec![1.0, 2.0, 3.0]);
         assert_eq!(Matrix::from_vec(1, 1, vec![14.0]), m1 * m2);
-        assert_eq!(Matrix::from_vec(3, 1, vec![1.0f64, 4.0, 7.0]),
-                   Matrix::from_vec(3, 3, vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0]) *
-                   Matrix::from_vec(3, 1, vec![1.0, 0.0, 0.0]));
-        assert_eq!(Matrix::from_vec(3, 2, vec![1.0f64, 3.0, 4.0, 6.0, 7.0, 9.0]),
-                   Matrix::from_vec(3, 3, vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0]) *
-                   Matrix::from_vec(3, 2, vec![1.0, 0.0, 0.0, 0.0, 0.0, 1.0]));
+        assert_eq!(
+            Matrix::from_vec(3, 1, vec![1.0f64, 4.0, 7.0]),
+            Matrix::from_vec(3, 3, vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0])
+                * Matrix::from_vec(3, 1, vec![1.0, 0.0, 0.0])
+        );
+        assert_eq!(
+            Matrix::from_vec(3, 2, vec![1.0f64, 3.0, 4.0, 6.0, 7.0, 9.0]),
+            Matrix::from_vec(3, 3, vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0])
+                * Matrix::from_vec(3, 2, vec![1.0, 0.0, 0.0, 0.0, 0.0, 1.0])
+        );
     }
 }
