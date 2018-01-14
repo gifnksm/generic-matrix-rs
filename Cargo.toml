@@ -6,7 +6,6 @@ license = "MIT OR Apache-2.0"
 readme = "README.md"
 repository = "https://github.com/gifnksm/generic-matrix-rs"
 description = "Manipulations and data types that represent 2d matrix."
-documentation = "https://gifnksm.github.io/generic-matrix-rs"
 
 [dependencies]
 num-traits = "0.1"

@@ -1,6 +1,12 @@
 language: rust
-dist: trusty
 sudo: false
+dist: trusty
+cache:
+  apt: true
+  cargo: true
+before_cache:
+    # Travis can't cache files that are not readable by "others"
+    - chmod -R a+r $HOME/.cargo
 
 addons:
   apt:
@@ -10,10 +16,8 @@ addons:
       - libdw-dev
       - binutils-dev
       - libiberty-dev
-
-env:
-  global:
-    - RUSTFLAGS="-C link-dead-code"
+    sources:
+      - kalakris-cmake
 
 rust:
   - nightly
@@ -21,27 +25,20 @@ rust:
   - stable
 
 before_script:
-  - cargo install cargo-kcov
-  - cargo kcov --print-install-kcov-sh | $SHELL
+  - travis_wait .travis/cargo-install cargo-travis
 
 script:
   - |
       cargo build &&
-      cargo kcov --coveralls &&
+      cargo test &&
       cargo bench &&
       cargo doc
 
-after_success: |
-  [ "${TRAVIS_BRANCH}" = master ] &&
-  [ "${TRAVIS_PULL_REQUEST}" == false ] &&
-  [ "${TRAVIS_RUST_VERSION}" == stable ] &&
-  cargo install ghp &&
-  ghp target/doc &&
-  git config user.name "Travis Documentation" &&
-  git config user.email "name@example.com" &&
-  git push -qf https://${GH_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git gh-pages 2>&1 > /dev/null
+after_success:
+  cargo coveralls
 
 env:
   global:
+    - RUSTFLAGS="-C link-dead-code"
     - TRAVIS_CARGO_NIGHTLY_FEATURE=""
     - secure: "aPvS0ktcObSvM5q/wgU7+erE+/se2j61+aYJ+7boS/tlNsSS48AmvM8kIbldS+QXsJQW92LW2A9eKW5BmdGDR9L0tcECchDXegKCOFsFqpULilxV9oQ92z++VBf9N4vluYBP++s2SyDN9sfeymiZ9yWYp4oLAjjncCRjOxFbcWc="
