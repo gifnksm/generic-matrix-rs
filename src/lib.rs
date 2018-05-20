@@ -16,7 +16,7 @@ use std::ops::{Add, Index, IndexMut, Mul, Sub};
 use num_traits::{One, Zero};
 
 /// 2D matrix.
-#[derive(PartialEq, Eq, Clone, Debug)]
+#[derive(PartialEq, Eq, Clone, Debug, Hash)]
 pub struct Matrix<T> {
     row: usize,
     column: usize,
