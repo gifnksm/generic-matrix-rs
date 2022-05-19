@@ -12,7 +12,7 @@
 
 extern crate num_traits;
 
-use std::mem::{replace, swap};
+use std::mem::swap;
 use std::ops::{Add, Index, IndexMut, Mul, Sub};
 use num_traits::{One, Zero};
 
@@ -67,12 +67,13 @@ impl<T> Matrix<T> {
         self.column
     }
     
+    /// Transposes the matrix in-place.
     pub fn trans_in_place(&mut self) {
         if self.row == self.column {
             // easy case of square matrix
             for i in 0..self.row {
                 for j in 0..i {
-                    swap(&mut self[(i, j)], &mut self[(j, i)]);
+                    self.data.swap(i * self.column + j, j * self.column + i);
                 }
             }
         } else {
@@ -80,16 +81,18 @@ impl<T> Matrix<T> {
             swap(&mut self.row, &mut self.column);
             if self.row > 1 && self.column > 1 {
                 // hard case of non-square matrix with both dimensions at least two
-                let skip_bitmap = [0u32; (self.row * self.column + 31) / 32];
+                let mut skip_bitmap = vec![0u32; (self.row * self.column + 31) / 32];
+                
                 for i in 0..self.row {
                     for j in 0..self.column {
                         // within this block is where bugs are most likely to be
-                        let mut this = i * self.column + j;
+                        let original_this = i * self.column + j;
+                        let mut this = original_this;
                         let mut other = j * self.row + i;
                         // make sure each rotation is performed exactly once
-                        while this < other && skip_bitmap[this / 32] & 1u32 << (this % 32) == 0 {
-                            swap(&mut self.data[this], &mut self.data[other]);
-                            skip_bitmap[other / 32] |= 1u32 << (other % 32);
+                        while original_this < other && skip_bitmap[this / 32] & (1u32 << (this % 32)) == 0 {
+                            self.data.swap(this, other);
+                            skip_bitmap[this / 32] |= 1u32 << (this % 32);
                             this = other;
                             other = (this % self.column) * self.row + (this / self.column);
                         }
@@ -358,19 +361,19 @@ mod tests {
         vector.trans_in_place();
         assert_eq!(vector, Matrix::from_vec(1, 3, vec![1, 2, 3]));
         
-        let mut rect_2_3 = Matrix::from_vec(2, 3, vec![1, 2, 3, 4, 5, 6]);
-        assert_eq!(rect_2_3.trans(), Matrix::from_vec(3, 2, vec![1, 3, 5, 2, 4, 6]));
+        let mut rect_2_3 = Matrix::from_vec(3, 2, vec![1, 2, 3, 4, 5, 6]);
+        assert_eq!(rect_2_3.trans(), Matrix::from_vec(2, 3, vec![1, 3, 5, 2, 4, 6]));
         rect_2_3.trans_in_place();
-        assert_eq!(rect_2_3, Matrix::from_vec(3, 2, vec![1, 3, 5, 2, 4, 6]));
+        assert_eq!(rect_2_3, Matrix::from_vec(2, 3, vec![1, 3, 5, 2, 4, 6]));
         
-        let mut rect_5_2 = Matrix::from_vec(5, 2, vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-        assert_eq!(rect_5_2.trans(), Matrix::from_vec(2, 5, vec![1, 6, 2, 7, 3, 8, 4, 9, 5, 10]));
+        let mut rect_5_2 = Matrix::from_vec(2, 5, vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+        assert_eq!(rect_5_2.trans(), Matrix::from_vec(5, 2, vec![1, 6, 2, 7, 3, 8, 4, 9, 5, 10]));
         rect_5_2.trans_in_place();
-        assert_eq!(rect_5_2, Matrix::from_vec(2, 5, vec![1, 6, 2, 7, 3, 8, 4, 9, 5, 10]));
+        assert_eq!(rect_5_2, Matrix::from_vec(5, 2, vec![1, 6, 2, 7, 3, 8, 4, 9, 5, 10]));
         
-        let mut rect_5_3 = Matrix::from_vec(5, 3, vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
-        assert_eq!(rect_5_3.trans(), Matrix::from_vec(3, 5, vec![1, 6, 11, 2, 7, 12, 3, 8, 13, 4, 9, 14, 5, 10, 15]));
+        let mut rect_5_3 = Matrix::from_vec(3, 5, vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+        assert_eq!(rect_5_3.trans(), Matrix::from_vec(5, 3, vec![1, 6, 11, 2, 7, 12, 3, 8, 13, 4, 9, 14, 5, 10, 15]));
         rect_5_3.trans_in_place();
-        assert_eq!(rect_5_3, Matrix::from_vec(3, 5, vec![1, 6, 11, 2, 7, 12, 3, 8, 13, 4, 9, 14, 5, 10, 15]));
+        assert_eq!(rect_5_3, Matrix::from_vec(5, 3, vec![1, 6, 11, 2, 7, 12, 3, 8, 13, 4, 9, 14, 5, 10, 15]));
     }
 }
