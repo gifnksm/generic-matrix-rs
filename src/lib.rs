@@ -17,8 +17,6 @@
     unused_results
 )]
 
-extern crate num_traits;
-
 use num_traits::{One, Zero};
 use std::mem::swap;
 use std::ops::{Add, Index, IndexMut, Mul, Sub};
