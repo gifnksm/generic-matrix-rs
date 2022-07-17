@@ -1,11 +1,12 @@
-# general-matrix-rs
-[![Build Status](https://travis-ci.org/gifnksm/generic-matrix-rs.svg)](https://travis-ci.org/gifnksm/generic-matrix-rs)
-[![Coverage Status](https://coveralls.io/repos/gifnksm/generic-matrix-rs/badge.svg?branch=master&service=github)](https://coveralls.io/github/gifnksm/generic-matrix-rs?branch=master)
-[![crates.io](http://meritbadge.herokuapp.com/generic-matrix)](https://crates.io/crates/generic-matrix)
+# generic-matrix-rs
+
+[![Rust CI](https://github.com/gifnksm/generic-matrix-rs/actions/workflows/rust-ci.yml/badge.svg)](https://github.com/gifnksm/generic-matrix-rs/actions/workflows/rust-ci.yml)
+[![codecov](https://codecov.io/gh/gifnksm/generic-matrix-rs/branch/master/graph/badge.svg?token=qbYUpthyTl)](https://codecov.io/gh/gifnksm/generic-matrix-rs)
+[![crates.io](https://img.shields.io/crates/v/generic-matrix.svg)](https://crates.io/crates/generic-matrix)
 
 Manipulations and data types that represent 2d matrix.
 
-[Documentation](http://gifnksm.github.io/generic-matrix-rs)
+[Documentation](https://docs.rs/generic-matrix/)
 
 ## How to use?
 
@@ -13,21 +14,15 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-generic-matrix = "*"
-```
-
-and this to your crate root:
-
-```rust
-extern crate generic_matrix as matrix;
+generic-matrix = "0.1"
 ```
 
 ## License
 
 Licensed under either of
 
- * Apache License, Version 2.0, ([LICENSE-APACHE](LICENSE-APACHE) or http://www.apache.org/licenses/LICENSE-2.0)
- * MIT license ([LICENSE-MIT](LICENSE-MIT) or http://opensource.org/licenses/MIT)
+* Apache License, Version 2.0, ([LICENSE-APACHE](LICENSE-APACHE) or <http://www.apache.org/licenses/LICENSE-2.0>)
+* MIT license ([LICENSE-MIT](LICENSE-MIT) or <http://opensource.org/licenses/MIT>)
 
 at your option.
 
