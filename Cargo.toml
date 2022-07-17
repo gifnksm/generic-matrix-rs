@@ -8,4 +8,4 @@ repository = "https://github.com/gifnksm/generic-matrix-rs"
 description = "Manipulations and data types that represent 2d matrix."
 
 [dependencies]
-num-traits = "0.1"
+num-traits = "0.2"
