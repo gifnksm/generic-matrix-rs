@@ -14,7 +14,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-generic-matrix = "0.1"
+generic-matrix = "0.2"
 ```
 
 ## License
