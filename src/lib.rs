@@ -7,14 +7,21 @@
 
 //! Manipulations and data types that represent 2d matrix.
 
-#![warn(bad_style, missing_docs, unused, unused_extern_crates, unused_import_braces,
-       unused_qualifications, unused_results)]
+#![warn(
+    bad_style,
+    missing_docs,
+    unused,
+    unused_extern_crates,
+    unused_import_braces,
+    unused_qualifications,
+    unused_results
+)]
 
 extern crate num_traits;
 
+use num_traits::{One, Zero};
 use std::mem::swap;
 use std::ops::{Add, Index, IndexMut, Mul, Sub};
-use num_traits::{One, Zero};
 
 /// 2D matrix.
 #[derive(PartialEq, Eq, Clone, Debug, Hash)]
@@ -32,8 +39,8 @@ impl<T> Matrix<T> {
         F: Fn(usize, usize) -> T,
     {
         Matrix {
-            row: row,
-            column: column,
+            row,
+            column,
             data: (0..row * column)
                 .map(|i| f(i / column, i % column))
                 .collect(),
@@ -44,11 +51,7 @@ impl<T> Matrix<T> {
     #[inline]
     pub fn from_vec(row: usize, column: usize, data: Vec<T>) -> Matrix<T> {
         assert_eq!(row * column, data.len());
-        Matrix {
-            row: row,
-            column: column,
-            data: data,
-        }
+        Matrix { row, column, data }
     }
 
     /// Returns the matrix's row and column.
@@ -66,7 +69,7 @@ impl<T> Matrix<T> {
     pub fn column(&self) -> usize {
         self.column
     }
-    
+
     /// Transposes the matrix in-place.
     pub fn trans_in_place(&mut self) {
         if self.row == self.column {
@@ -82,7 +85,7 @@ impl<T> Matrix<T> {
             if self.row > 1 && self.column > 1 {
                 // hard case of non-square matrix with both dimensions at least two
                 let mut skip_bitmap = vec![0u32; (self.row * self.column + 31) / 32];
-                
+
                 for i in 0..self.row {
                     for j in 0..self.column {
                         // within this block is where bugs are most likely to be
@@ -90,7 +93,9 @@ impl<T> Matrix<T> {
                         let mut this = original_this;
                         let mut other = j * self.row + i;
                         // make sure each rotation is performed exactly once
-                        while original_this < other && skip_bitmap[this / 32] & (1u32 << (this % 32)) == 0 {
+                        while original_this < other
+                            && skip_bitmap[this / 32] & (1u32 << (this % 32)) == 0
+                        {
                             self.data.swap(this, other);
                             skip_bitmap[this / 32] |= 1u32 << (this % 32);
                             this = other;
@@ -115,11 +120,11 @@ impl<T: One + Zero> Matrix<T> {
     /// Creates a identity matrix.
     #[inline]
     pub fn one(row: usize, column: usize) -> Matrix<T> {
-        Matrix::from_fn(row, column, |i, j| if i == j {
-            One::one()
-        } else {
-            Zero::zero()
-        })
+        Matrix::from_fn(
+            row,
+            column,
+            |i, j| if i == j { One::one() } else { Zero::zero() },
+        )
     }
 }
 
@@ -152,7 +157,9 @@ impl<T> IndexMut<(usize, usize)> for Matrix<T> {
 macro_rules! forward_val_val_binop {
     (impl $imp:ident, $method:ident) => {
         impl<Lhs, Rhs> $imp<Matrix<Rhs>> for Matrix<Lhs>
-            where Lhs: $imp<Rhs> + Clone, Rhs: Clone
+        where
+            Lhs: $imp<Rhs> + Clone,
+            Rhs: Clone,
         {
             type Output = Matrix<<Lhs as $imp<Rhs>>::Output>;
 
@@ -161,13 +168,15 @@ macro_rules! forward_val_val_binop {
                 $imp::$method(&self, &other)
             }
         }
-    }
+    };
 }
 
 macro_rules! forward_ref_val_binop {
     (impl $imp:ident, $method:ident) => {
         impl<'a, Lhs, Rhs> $imp<Matrix<Rhs>> for &'a Matrix<Lhs>
-            where Lhs: $imp<Rhs> + Clone, Rhs: Clone
+        where
+            Lhs: $imp<Rhs> + Clone,
+            Rhs: Clone,
         {
             type Output = Matrix<<Lhs as $imp<Rhs>>::Output>;
 
@@ -176,13 +185,15 @@ macro_rules! forward_ref_val_binop {
                 $imp::$method(self, &other)
             }
         }
-    }
+    };
 }
 
 macro_rules! forward_val_ref_binop {
     (impl $imp:ident, $method:ident) => {
         impl<'a, Lhs, Rhs> $imp<&'a Matrix<Rhs>> for Matrix<Lhs>
-            where Lhs: $imp<Rhs> + Clone, Rhs: Clone
+        where
+            Lhs: $imp<Rhs> + Clone,
+            Rhs: Clone,
         {
             type Output = Matrix<<Lhs as $imp<Rhs>>::Output>;
 
@@ -191,7 +202,7 @@ macro_rules! forward_val_ref_binop {
                 $imp::$method(&self, other)
             }
         }
-    }
+    };
 }
 
 macro_rules! forward_all_binop {
@@ -348,32 +359,65 @@ mod tests {
                 * Matrix::from_vec(3, 2, vec![1.0, 0.0, 0.0, 0.0, 0.0, 1.0])
         );
     }
-    
+
     #[test]
     fn trans() {
         let mut square = Matrix::from_vec(3, 3, vec![1, 2, 3, 4, 5, 6, 7, 8, 9]);
-        assert_eq!(square.trans(), Matrix::from_vec(3, 3, vec![1, 4, 7, 2, 5, 8, 3, 6, 9]));
+        assert_eq!(
+            square.trans(),
+            Matrix::from_vec(3, 3, vec![1, 4, 7, 2, 5, 8, 3, 6, 9])
+        );
         square.trans_in_place();
-        assert_eq!(square, Matrix::from_vec(3, 3, vec![1, 4, 7, 2, 5, 8, 3, 6, 9]));
-        
+        assert_eq!(
+            square,
+            Matrix::from_vec(3, 3, vec![1, 4, 7, 2, 5, 8, 3, 6, 9])
+        );
+
         let mut vector = Matrix::from_vec(3, 1, vec![1, 2, 3]);
         assert_eq!(vector.trans(), Matrix::from_vec(1, 3, vec![1, 2, 3]));
         vector.trans_in_place();
         assert_eq!(vector, Matrix::from_vec(1, 3, vec![1, 2, 3]));
-        
+
         let mut rect_2_3 = Matrix::from_vec(3, 2, vec![1, 2, 3, 4, 5, 6]);
-        assert_eq!(rect_2_3.trans(), Matrix::from_vec(2, 3, vec![1, 3, 5, 2, 4, 6]));
+        assert_eq!(
+            rect_2_3.trans(),
+            Matrix::from_vec(2, 3, vec![1, 3, 5, 2, 4, 6])
+        );
         rect_2_3.trans_in_place();
         assert_eq!(rect_2_3, Matrix::from_vec(2, 3, vec![1, 3, 5, 2, 4, 6]));
-        
+
         let mut rect_5_2 = Matrix::from_vec(2, 5, vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-        assert_eq!(rect_5_2.trans(), Matrix::from_vec(5, 2, vec![1, 6, 2, 7, 3, 8, 4, 9, 5, 10]));
+        assert_eq!(
+            rect_5_2.trans(),
+            Matrix::from_vec(5, 2, vec![1, 6, 2, 7, 3, 8, 4, 9, 5, 10])
+        );
         rect_5_2.trans_in_place();
-        assert_eq!(rect_5_2, Matrix::from_vec(5, 2, vec![1, 6, 2, 7, 3, 8, 4, 9, 5, 10]));
-        
-        let mut rect_5_3 = Matrix::from_vec(3, 5, vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
-        assert_eq!(rect_5_3.trans(), Matrix::from_vec(5, 3, vec![1, 6, 11, 2, 7, 12, 3, 8, 13, 4, 9, 14, 5, 10, 15]));
+        assert_eq!(
+            rect_5_2,
+            Matrix::from_vec(5, 2, vec![1, 6, 2, 7, 3, 8, 4, 9, 5, 10])
+        );
+
+        let mut rect_5_3 = Matrix::from_vec(
+            3,
+            5,
+            vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+        );
+        assert_eq!(
+            rect_5_3.trans(),
+            Matrix::from_vec(
+                5,
+                3,
+                vec![1, 6, 11, 2, 7, 12, 3, 8, 13, 4, 9, 14, 5, 10, 15]
+            )
+        );
         rect_5_3.trans_in_place();
-        assert_eq!(rect_5_3, Matrix::from_vec(5, 3, vec![1, 6, 11, 2, 7, 12, 3, 8, 13, 4, 9, 14, 5, 10, 15]));
+        assert_eq!(
+            rect_5_3,
+            Matrix::from_vec(
+                5,
+                3,
+                vec![1, 6, 11, 2, 7, 12, 3, 8, 13, 4, 9, 14, 5, 10, 15]
+            )
+        );
     }
 }
