@@ -39,8 +39,8 @@ impl<T> Matrix<T> {
         F: Fn(usize, usize) -> T,
     {
         Matrix {
-            row: row,
-            column: column,
+            row,
+            column,
             data: (0..row * column)
                 .map(|i| f(i / column, i % column))
                 .collect(),
@@ -51,11 +51,7 @@ impl<T> Matrix<T> {
     #[inline]
     pub fn from_vec(row: usize, column: usize, data: Vec<T>) -> Matrix<T> {
         assert_eq!(row * column, data.len());
-        Matrix {
-            row: row,
-            column: column,
-            data: data,
-        }
+        Matrix { row, column, data }
     }
 
     /// Returns the matrix's row and column.
