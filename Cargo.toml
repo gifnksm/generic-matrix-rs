@@ -11,3 +11,8 @@ description = "Manipulations and data types that represent 2d matrix."
 
 [dependencies]
 num-traits = "0.2"
+
+[package.metadata.release]
+pre-release-replacements = [
+    { file = "README.md", search = "generic-matrix = \"[0-9\\.]+\"", replace = "{{crate_name}} = \"{{version}}\"" }
+]
