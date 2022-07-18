@@ -3,6 +3,7 @@
 [![license](https://img.shields.io/crates/l/generic-matrix.svg)](#license)
 [![crates.io](https://img.shields.io/crates/v/generic-matrix.svg)](https://crates.io/crates/generic-matrix)
 [![docs.rs](https://img.shields.io/docsrs/generic-matrix/latest)](https://docs.rs/generic-matrix/latest/)
+[![rust 1.39.0+ badge](https://img.shields.io/badge/rust-1.39.0+-93450a.svg)](https://doc.rust-lang.org/cargo/reference/manifest.html#the-rust-version-field)
 [![Rust CI](https://github.com/gifnksm/generic-matrix-rs/actions/workflows/rust-ci.yml/badge.svg)](https://github.com/gifnksm/generic-matrix-rs/actions/workflows/rust-ci.yml)
 [![codecov](https://codecov.io/gh/gifnksm/generic-matrix-rs/branch/master/graph/badge.svg?token=qbYUpthyTl)](https://codecov.io/gh/gifnksm/generic-matrix-rs)
 
