@@ -1,8 +1,10 @@
 # generic-matrix-rs
 
+[![license](https://img.shields.io/crates/l/generic-matrix.svg)](#license)
+[![crates.io](https://img.shields.io/crates/v/generic-matrix.svg)](https://crates.io/crates/generic-matrix)
+[![docs.rs](https://img.shields.io/docsrs/generic-matrix/latest)](https://docs.rs/generic-matrix/latest/)
 [![Rust CI](https://github.com/gifnksm/generic-matrix-rs/actions/workflows/rust-ci.yml/badge.svg)](https://github.com/gifnksm/generic-matrix-rs/actions/workflows/rust-ci.yml)
 [![codecov](https://codecov.io/gh/gifnksm/generic-matrix-rs/branch/master/graph/badge.svg?token=qbYUpthyTl)](https://codecov.io/gh/gifnksm/generic-matrix-rs)
-[![crates.io](https://img.shields.io/crates/v/generic-matrix.svg)](https://crates.io/crates/generic-matrix)
 
 Manipulations and data types that represent 2d matrix.
 
@@ -16,6 +18,14 @@ Add this to your `Cargo.toml`:
 [dependencies]
 generic-matrix = "0.2"
 ```
+
+## Minimum supported Rust version (MSRV)
+
+The minimum supported Rust version is **Rust 1.39.0**.
+At least the last 3 versions of stable Rust are supported at any given time.
+
+While a crate is pre-release status (0.x.x) it may have its MSRV bumped in a patch release.
+Once a crate has reached 1.x, any MSRV bump will be accompanied with a new minor version.
 
 ## License
 
