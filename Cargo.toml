@@ -9,6 +9,9 @@ readme = "README.md"
 repository = "https://github.com/gifnksm/generic-matrix-rs"
 description = "Manipulations and data types that represent 2d matrix."
 
+[badges]
+maintenance = { status = "passively-maintained" }
+
 [dependencies]
 num-traits = "0.2"
 

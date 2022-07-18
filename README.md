@@ -1,5 +1,6 @@
 # generic-matrix-rs
 
+[![maintenance status: passively-maintained](https://img.shields.io/badge/maintenance-passively--maintained-yellowgreen.svg)](https://doc.rust-lang.org/cargo/reference/manifest.html#the-badges-section)
 [![license](https://img.shields.io/crates/l/generic-matrix.svg)](#license)
 [![crates.io](https://img.shields.io/crates/v/generic-matrix.svg)](https://crates.io/crates/generic-matrix)
 [![docs.rs](https://img.shields.io/docsrs/generic-matrix/latest)](https://docs.rs/generic-matrix/latest/)
