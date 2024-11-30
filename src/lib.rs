@@ -213,7 +213,7 @@ macro_rules! forward_all_binop {
 
 forward_all_binop!(impl Add, add);
 
-impl<'a, 'b, Lhs, Rhs> Add<&'b Matrix<Rhs>> for &'a Matrix<Lhs>
+impl<Lhs, Rhs> Add<&Matrix<Rhs>> for &Matrix<Lhs>
 where
     Lhs: Add<Rhs> + Clone,
     Rhs: Clone,
@@ -231,7 +231,7 @@ where
 
 forward_all_binop!(impl Sub, sub);
 
-impl<'a, 'b, Lhs, Rhs> Sub<&'b Matrix<Rhs>> for &'a Matrix<Lhs>
+impl<Lhs, Rhs> Sub<&Matrix<Rhs>> for &Matrix<Lhs>
 where
     Lhs: Sub<Rhs> + Clone,
     Rhs: Clone,
@@ -261,7 +261,7 @@ where
     }
 }
 
-impl<'a, Lhs, Rhs> Mul<Matrix<Rhs>> for &'a Matrix<Lhs>
+impl<Lhs, Rhs> Mul<Matrix<Rhs>> for &Matrix<Lhs>
 where
     Lhs: Mul<Rhs> + Clone,
     Rhs: Clone,
@@ -275,7 +275,7 @@ where
     }
 }
 
-impl<'a, Lhs, Rhs> Mul<&'a Matrix<Rhs>> for Matrix<Lhs>
+impl<Lhs, Rhs> Mul<&Matrix<Rhs>> for Matrix<Lhs>
 where
     Lhs: Mul<Rhs> + Clone,
     Rhs: Clone,
@@ -289,7 +289,7 @@ where
     }
 }
 
-impl<'a, 'b, Lhs, Rhs> Mul<&'b Matrix<Rhs>> for &'a Matrix<Lhs>
+impl<Lhs, Rhs> Mul<&Matrix<Rhs>> for &Matrix<Lhs>
 where
     Lhs: Mul<Rhs> + Clone,
     Rhs: Clone,
